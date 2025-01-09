@@ -1,54 +1,24 @@
 import "./tasks.css";
-import { useState } from "react";
-import { INFOTASKS } from "../data/infotasks";
 
-// const ITEMS = [
-//   {
-//     id: 1,
-//     name: "review files",
-//     checked: true,
-//   },
-//   {
-//     id: 2,
-//     name: "edit video",
-//     checked: true,
-//   },
-//   {
-//     id: 3,
-//     name: "attend linch",
-//     checked: false,
-//   },
-//   {
-//     id: 4,
-//     name: "buy groceries",
-//     checked: false,
-//   },
-//   {
-//     id: 5,
-//     name: "buy tickets",
-//     checked: false,
-//   },
-// ];
-// console.log(INFOTASKS);
-
-const Tasks = () => {
-  const [info, setInfo] = useState(INFOTASKS);
-  function handleChange() {
-    setInfo(!info);
-  }
-  console.log(info);
+const Tasks = ({ info, setInfo, removeItem }) => {
   return (
     <div className="datainfo">
-      {INFOTASKS.map((items) => (
-        <div key={items.id} className="item-container">
+      {info.map((item, index) => (
+        <div key={index} className="item-container">
           <div className="title">
             <input
               className="input_check"
-              checked={info.checked}
-              onClick={() => handleChange()}
+              defaultChecked={item.checked}
               type="checkbox"
+              onChange={(e) => {
+                info[index].checked = !info[index].checked;
+                setInfo([...info]);
+                return !e.target.checked;
+              }}
             />
-            <span className="info_items">{items.name}</span>
+            <span className={`info_items ${item.checked ? "checked" : ""}`}>
+              {item.name}
+            </span>
             <div className="icons_btn">
               <button className="iconsbtnedit">
                 <img
@@ -59,7 +29,10 @@ const Tasks = () => {
               </button>
             </div>
             <div className="icons_btn">
-              <button className="iconsbtndelete">
+              <button
+                className="iconsbtndelete"
+                onClick={() => removeItem(item.id)}
+              >
                 <img
                   className="btn_icons_delete"
                   src="/images/delete.png"

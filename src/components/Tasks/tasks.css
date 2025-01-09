@@ -2,23 +2,29 @@ input {
   outline: none;
 }
 
+.checked {
+  text-decoration: line-through;
+}
+
 .btn_icons_delete {
-  max-width: 14px;
-  max-height: 14px;
+  max-width: 16px;
+  max-height: 16px;
   margin: 6px;
+  filter: brightness(0) invert(1);
 }
 
 .btn_icons_edit {
-  max-width: 14px;
-  max-height: 14px;
+  max-width: 16px;
+  max-height: 16px;
   margin: 6px;
+  filter: brightness(0) invert(1);
 }
 
 .title {
   display: flex;
   align-items: center;
-  border-radius: 10px;
-  background-color: silver;
+  border-radius: 4px;
+  background-color: rgb(255, 255, 255);
   padding: 10px;
 }
 
