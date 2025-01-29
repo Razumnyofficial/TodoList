@@ -2,26 +2,26 @@ export const INFOTASKS = [
   {
     id: 1,
     name: "review files",
-    checked: true,
+    isDone: true,
   },
   {
     id: 2,
     name: "edit video",
-    checked: true,
+    isDone: true,
   },
   {
     id: 3,
     name: "attend linch",
-    checked: false,
+    isDone: false,
   },
   {
     id: 4,
     name: "buy groceries",
-    checked: false,
+    isDone: false,
   },
   {
     id: 5,
     name: "buy tickets",
-    checked: false,
+    isDone: false,
   },
 ];

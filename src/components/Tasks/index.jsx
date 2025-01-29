@@ -1,34 +1,103 @@
+import { useState } from "react";
 import "./tasks.css";
 
-const Tasks = ({ info, setInfo, removeItem }) => {
+const Tasks = ({ info, setInfo, removeItem, filterParams }) => {
+  const [editingTaskId, setEditingTaskId] = useState(null); // Состояние для редактируемой задачи
+  const [editedTaskName, setEditedTaskName] = useState(""); // Состояние для нового названия задачи
+
+  const filteredInfo =
+    filterParams === null
+      ? info
+      : info.filter((item) => item.isDone === filterParams);
+
+  const handleCheckboxChange = (e, item) => {
+    const updatedInfo = info.map((task) =>
+      task.id === item.id ? { ...task, isDone: e.target.isDone } : task
+    );
+    setInfo(updatedInfo);
+  };
+
+  const handleEditClick = (item) => {
+    setEditingTaskId(item.id);
+    setEditedTaskName(item.title); // Заполняем поле для редактирования текущим названием
+  };
+
+  const handleSaveEdit = (id) => {
+    const updatedInfo = info.map((task) =>
+      task.id === id ? { ...task, title: editedTaskName } : task
+    );
+    setInfo(updatedInfo);
+    setEditingTaskId(null); // Завершаем редактирование
+  };
+
+  const handleCancelEdit = () => {
+    setEditingTaskId(null); // Отменяем редактирование
+  };
+
   return (
     <div className="datainfo">
-      {info.map((item, index) => (
-        <div key={index} className="item-container">
+      {filteredInfo.map((item) => (
+        <div key={item.id} className="item-container">
           <div className="title">
             <input
               className="input_check"
-              defaultChecked={item.checked}
+              checked={item.isDone}
               type="checkbox"
-              onChange={(e) => {
-                info[index].checked = !info[index].checked;
-                setInfo([...info]);
-                return !e.target.checked;
-              }}
+              onChange={(e) => handleCheckboxChange(e, item)}
             />
-            <span className={`info_items ${item.checked ? "checked" : ""}`}>
-              {item.name}
-            </span>
-            <div className="icons_btn">
-              <button className="iconsbtnedit">
-                <img
-                  className="btn_icons_edit"
-                  src="/images/edit.png"
-                  alt="edit"
+            {editingTaskId === item.id ? (
+              // Когда задача в режиме редактирования
+              <div className="edit-form">
+                <input
+                  type="text"
+                  value={editedTaskName}
+                  onChange={(e) => setEditedTaskName(e.target.value)}
+                  autoFocus
                 />
-              </button>
-            </div>
+              </div>
+            ) : (
+              // Когда задача не редактируется
+              <span className={`info_items ${item.isDone ? "isDone" : ""}`}>
+                {item.title}
+              </span>
+            )}
+
             <div className="icons_btn">
+              {editingTaskId !== item.id ? (
+                // Показываем кнопку редактирования только если задача не редактируется
+                <button
+                  className="iconsbtnedit"
+                  onClick={() => handleEditClick(item)}
+                >
+                  <img
+                    className="btn_icons_edit"
+                    src="/images/edit.png"
+                    alt="edit"
+                  />
+                </button>
+              ) : (
+                // Показываем кнопки "Сохранить" и "Отмена", если задача редактируется
+                <>
+                  <button
+                    className="iconsbtnsave"
+                    onClick={() => handleSaveEdit(item.id)}
+                  >
+                    <img
+                      className="btn_icons_1"
+                      src="/images/seves.png"
+                      alt="saves"
+                    />
+                  </button>
+                  <button className="iconsbtnsave" onClick={handleCancelEdit}>
+                    <img
+                      className="btn_icons_1"
+                      src="/images/deletes.png"
+                      alt="deletes"
+                    />
+                  </button>
+                </>
+              )}
+              {/* Кнопка удаления остается всегда */}
               <button
                 className="iconsbtndelete"
                 onClick={() => removeItem(item.id)}

@@ -1,7 +1,6 @@
 import "./header.css";
 
 const Header = ({ inputName, setInputName, info, setInfo }) => {
-  console.log(info);
   return (
     <div className="header">
       <input
@@ -14,7 +13,7 @@ const Header = ({ inputName, setInputName, info, setInfo }) => {
       <button
         className="btn_color"
         onClick={() => {
-          setInfo([{ name: inputName, checked: false }, ...info]);
+          setInfo([{ name: inputName, isDone: false }, ...info]);
           setInputName("");
         }}
       >
