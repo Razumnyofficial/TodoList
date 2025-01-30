@@ -7,22 +7,35 @@ import { INFOTASKS } from "./components/data/infotasks";
 import "./app.css";
 
 function App() {
-  const [TasksData, setTasksData] = useState([]);
   const [inputName, setInputName] = useState("");
   // const [info, setInfo] = useState(INFOTASKS);
   const [filterParams, setFilterParams] = useState(null);
+  const [error, setError] = useState(); // состояние ошибки
+  const [TasksData, setTasksData] = useState([]); // получение и состояние данных
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("https://easydev.club/api/v1/todos");
+      try {
+        const response = await fetch("https://easydev.club/api/v1/todos");
+        const resData = await response.json();
 
-      const resData = await response.json();
-
-      setTasksData(resData.data);
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        setTasksData(resData.data);
+      } catch (error) {
+        setError({
+          message: error.message || "Could not fetch data, please try again", //тут не выводится(разобраться)
+        });
+      }
     };
 
     fetchData();
   }, []);
+
+  if (error) {
+    return <h1>Ошибка обработки данных |{error.message}</h1>;
+  }
 
   // useEffect(() => {
   //   fetch("https://easydev.club/api/v2/todos")
