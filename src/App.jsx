@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import TitleTasks from "./components/TitileTask";
-import { INFOTASKS } from "./components/data/infotasks";
 
 import "./app.css";
 
@@ -13,6 +12,7 @@ function App() {
   const [error, setError] = useState(); // состояние ошибки
   const [TasksData, setTasksData] = useState([]); // получение и состояние данных
 
+  //Get запрос
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,24 +33,40 @@ function App() {
     fetchData();
   }, []);
 
+  // POST
+
+  const addTask = async () => {
+    if (!inputName.trim()) return;
+
+    const newTask = {
+      title: inputName,
+      isDone: false,
+    };
+
+    try {
+      const response = await fetch("https://easydev.club/api/v1/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed add Task");
+      }
+
+      const resData = await response.json();
+      setTasksData((prevTask) => [resData.data, ...prevTask]);
+      setInputName("");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   if (error) {
     return <h1>Ошибка обработки данных |{error.message}</h1>;
   }
-
-  // useEffect(() => {
-  //   fetch("https://easydev.club/api/v2/todos")
-  //     .then((response) => {
-  //       return response.json();
-  //     })
-  //     .then((resData) => {
-  //       setTasksData(resData.data);
-  //     });
-  // }, []);
-
-  // function removeItem(id) {
-  //   let resultItem = info.filter((item) => item.id !== id);
-  //   setInfo(resultItem);
-  // }
 
   return (
     <div className="App">
@@ -58,8 +74,7 @@ function App() {
         <Header
           inputName={inputName}
           setInputName={setInputName}
-          info={TasksData}
-          // setInfo={setInfo}
+          addTask={addTask}
         />
         <TitleTasks
           info={TasksData}

@@ -1,6 +1,6 @@
 import "./header.css";
 
-const Header = ({ inputName, setInputName, info, setInfo }) => {
+const Header = ({ inputName, setInputName, addTask }) => {
   return (
     <div className="header">
       <input
@@ -10,13 +10,7 @@ const Header = ({ inputName, setInputName, info, setInfo }) => {
         value={inputName}
         onChange={(e) => setInputName(e.target.value)}
       />
-      <button
-        className="btn_color"
-        onClick={() => {
-          setInfo([{ name: inputName, isDone: false }, ...info]);
-          setInputName("");
-        }}
-      >
+      <button className="btn_color" onClick={addTask}>
         Add
       </button>
     </div>
