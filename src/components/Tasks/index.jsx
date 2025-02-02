@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./tasks.css";
 
-const Tasks = ({ info, setInfo, removeItem, filterParams }) => {
+const Tasks = ({ info, removeItem, filterParams, updateTask }) => {
   const [editingTaskId, setEditingTaskId] = useState(null); // Состояние для редактируемой задачи
   const [editedTaskName, setEditedTaskName] = useState(""); // Состояние для нового названия задачи
 
@@ -10,28 +10,14 @@ const Tasks = ({ info, setInfo, removeItem, filterParams }) => {
       ? info
       : info.filter((item) => item.isDone === filterParams);
 
-  const handleCheckboxChange = (e, item) => {
-    const updatedInfo = info.map((task) =>
-      task.id === item.id ? { ...task, isDone: e.target.isDone } : task
-    );
-    setInfo(updatedInfo);
-  };
-
   const handleEditClick = (item) => {
     setEditingTaskId(item.id);
-    setEditedTaskName(item.title); // Заполняем поле для редактирования текущим названием
+    setEditedTaskName(item.title);
   };
 
-  const handleSaveEdit = (id) => {
-    const updatedInfo = info.map((task) =>
-      task.id === id ? { ...task, title: editedTaskName } : task
-    );
-    setInfo(updatedInfo);
-    setEditingTaskId(null); // Завершаем редактирование
-  };
-
-  const handleCancelEdit = () => {
-    setEditingTaskId(null); // Отменяем редактирование
+  const handleSaveEdit = () => {
+    updateTask(editingTaskId, editedTaskName);
+    setEditingTaskId(null);
   };
 
   return (
@@ -43,7 +29,9 @@ const Tasks = ({ info, setInfo, removeItem, filterParams }) => {
               className="input_check"
               checked={item.isDone}
               type="checkbox"
-              onChange={(e) => handleCheckboxChange(e, item)}
+              onChange={(e) =>
+                updateTask(item.id, item.title, e.target.checked)
+              }
             />
             {editingTaskId === item.id ? (
               // Когда задача в режиме редактирования
@@ -52,7 +40,7 @@ const Tasks = ({ info, setInfo, removeItem, filterParams }) => {
                   type="text"
                   value={editedTaskName}
                   onChange={(e) => setEditedTaskName(e.target.value)}
-                  autoFocus
+                  // autoFocus
                 />
               </div>
             ) : (
@@ -78,17 +66,17 @@ const Tasks = ({ info, setInfo, removeItem, filterParams }) => {
               ) : (
                 // Показываем кнопки "Сохранить" и "Отмена", если задача редактируется
                 <>
-                  <button
-                    className="iconsbtnsave"
-                    onClick={() => handleSaveEdit(item.id)}
-                  >
+                  <button className="iconsbtnsave" onClick={handleSaveEdit}>
                     <img
                       className="btn_icons_1"
                       src="/images/seves.png"
                       alt="saves"
                     />
                   </button>
-                  <button className="iconsbtnsave" onClick={handleCancelEdit}>
+                  <button
+                    className="iconsbtnsave"
+                    onClick={() => setEditingTaskId(null)}
+                  >
                     <img
                       className="btn_icons_1"
                       src="/images/deletes.png"
