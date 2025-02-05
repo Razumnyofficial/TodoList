@@ -7,7 +7,7 @@ const Tasks = ({ info, removeItem, filterParams, updateTask }) => {
 
   const filteredInfo =
     filterParams === null
-      ? info
+      ? info.sort((item1, item2) => item2.id - item1.id)
       : info.filter((item) => item.isDone === filterParams);
 
   const handleEditClick = (item) => {
@@ -17,7 +17,7 @@ const Tasks = ({ info, removeItem, filterParams, updateTask }) => {
 
   const handleSaveEdit = () => {
     updateTask(editingTaskId, editedTaskName);
-    setEditingTaskId(null);
+    setEditingTaskId(0);
   };
 
   return (

@@ -35,7 +35,9 @@ function App() {
   // POST
 
   const addTask = async () => {
-    if (!inputName.trim()) return;
+    // if (!inputName.trim()) return;
+    if (!inputName.trim() || inputName.length < 2 || inputName.length > 62)
+      return alert("Ошибка: Имя должно содержать от 2 до 62 символов.");
 
     const newTask = {
       title: inputName,
@@ -55,7 +57,7 @@ function App() {
         throw new Error("Failed add Task");
       }
 
-     await fetchData();
+      await fetchData();
       setInputName("");
     } catch (error) {
       console.error(error);
